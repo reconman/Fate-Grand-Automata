@@ -8,7 +8,7 @@ namespace FateGrandAutomata
     {
         Messenger _client;
 
-        void SendResponse(int What, Object Obj)
+        void SendResponse(int What, Object Obj = null)
         {
             var msg = Obj != null
                 ? Message.Obtain(null, What, Obj)
@@ -35,6 +35,23 @@ namespace FateGrandAutomata
 
                 case ProxyService.MsgAskStatus:
                     SendResponse(ProxyService.MsgReceiveStatus, GetStatusText());
+                    break;
+
+                case ProxyService.MsgToggleService:
+                    var instance = ScriptRunnerService.Instance;
+
+                    if (instance.ServiceStarted)
+                    {
+                        instance.Stop();
+                    }
+                    else
+                    {
+                        if (ScriptRunnerService.Instance.HasMediaProjectionToken)
+                        {
+                            instance.Start();
+                        }
+                        else SendResponse(ProxyService.MsgNoMediaProjectionToken);
+                    }
                     break;
 
                 default:

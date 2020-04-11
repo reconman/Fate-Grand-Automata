@@ -13,6 +13,8 @@ namespace FateGrandAutomata
         public const int MsgCutout = 3;
         public const int MsgAskStatus = 4;
         public const int MsgReceiveStatus = 5;
+        public const int MsgToggleService = 6;
+        public const int MsgNoMediaProjectionToken = 7;
 
         public override IBinder OnBind(Intent Intent)
         {

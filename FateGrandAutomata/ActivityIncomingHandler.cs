@@ -1,4 +1,6 @@
-﻿using Android.OS;
+﻿using Android.Content;
+using Android.Media.Projection;
+using Android.OS;
 using Android.Widget;
 
 namespace FateGrandAutomata
@@ -22,6 +24,13 @@ namespace FateGrandAutomata
                     var statusText = Msg.Obj.ToString();
 
                     statusTextView.Text = statusText;
+                    break;
+
+                case ProxyService.MsgNoMediaProjectionToken:
+                    // This initiates a prompt dialog for the user to confirm screen projection.
+                    var mediaProjectionManager = (MediaProjectionManager) _activity.GetSystemService(Context.MediaProjectionService);
+
+                    _activity.StartActivityForResult(mediaProjectionManager.CreateScreenCaptureIntent(), MainActivity.RequestMediaProjection);
                     break;
 
                 default:

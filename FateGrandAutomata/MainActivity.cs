@@ -173,21 +173,7 @@ namespace FateGrandAutomata
             if (!CheckAccessibilityService()) 
                 return;
 
-            var instance = ScriptRunnerService.Instance;
-
-            if (instance.ServiceStarted)
-            {
-                instance.Stop();
-            }
-            else
-            {
-                if (ScriptRunnerService.Instance.HasMediaProjectionToken)
-                {
-                    instance.Start();
-                }
-                // This initiates a prompt dialog for the user to confirm screen projection.
-                else StartActivityForResult(instance.MediaProjectionManager.CreateScreenCaptureIntent(), RequestMediaProjection);
-            }
+            _connection.SendMessage(ProxyService.MsgToggleService);
         }
         public override void OnRequestPermissionsResult(int RequestCode, string[] Permissions, [GeneratedEnum] Android.Content.PM.Permission[] GrantResults)
         {
@@ -196,7 +182,7 @@ namespace FateGrandAutomata
             base.OnRequestPermissionsResult(RequestCode, Permissions, GrantResults);
         }
 
-        const int RequestMediaProjection = 1;
+        public const int RequestMediaProjection = 1;
     }
 }
 
