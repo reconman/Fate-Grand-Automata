@@ -38,6 +38,46 @@ namespace FateGrandAutomata
             ShowStatusText();
         }
 
+        protected override void OnStart()
+        {
+            base.OnStart();
+
+            BindService(new Intent(this, typeof(ProxyService)),
+                _connection,
+                Bind.AutoCreate);
+        }
+
+        protected override void OnStop()
+        {
+            base.OnStop();
+
+            if (_connection.IsBound)
+            {
+                if (_connection.Messenger != null)
+                {
+                    try
+                    {
+                        var msg = Message.Obtain(null, ProxyService.MsgUnregisterClient);
+                        msg.ReplyTo = _connection.Receiver;
+                        _connection.Messenger.Send(msg);
+                    }
+                    catch (RemoteException)
+                    {
+                        // There is nothing special we need to do if the service has crashed.
+                    }
+                }
+
+                UnbindService(_connection);
+            }
+        }
+
+        public MainActivity()
+        {
+            _connection = new ProxyConnection(this);
+        }
+
+        readonly ProxyConnection _connection;
+
         public override void OnAttachedToWindow()
         {
             base.OnAttachedToWindow();
