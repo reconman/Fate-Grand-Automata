@@ -15,6 +15,7 @@ namespace FateGrandAutomata
         public const int MsgReceiveStatus = 5;
         public const int MsgToggleService = 6;
         public const int MsgNoMediaProjectionToken = 7;
+        public const int MsgAccessibilityServiceNotRunning = 8;
 
         public override IBinder OnBind(Intent Intent)
         {

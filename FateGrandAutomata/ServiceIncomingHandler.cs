@@ -40,7 +40,11 @@ namespace FateGrandAutomata
                 case ProxyService.MsgToggleService:
                     var instance = ScriptRunnerService.Instance;
 
-                    if (instance.ServiceStarted)
+                    if (instance == null)
+                    {
+                        SendResponse(ProxyService.MsgAccessibilityServiceNotRunning);
+                    }
+                    else if (instance.ServiceStarted)
                     {
                         instance.Stop();
                     }

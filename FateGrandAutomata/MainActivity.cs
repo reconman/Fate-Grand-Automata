@@ -148,33 +148,11 @@ namespace FateGrandAutomata
             }
         }
 
-        bool CheckAccessibilityService()
-        {
-            if (ScriptRunnerService.Instance != null)
-                return true;
-
-            new AlertDialog.Builder(this)
-                .SetTitle("Accessibility Disabled")
-                .SetMessage("Turn on accessibility for this app from System settings. If it is already On, turn it OFF and start again.")
-                .SetPositiveButton("Go To Settings", (S, E) =>
-                {
-                    // Open Acessibility Settings
-                    var intent = new Intent(Settings.ActionAccessibilitySettings);
-                    StartActivity(intent);
-                })
-                .SetNegativeButton("Cancel", (S, E) => { })
-                .Show();
-
-            return false;
-        }
-
         void ServiceToggleBtnOnClick(object Sender, EventArgs EventArgs)
         {
-            if (!CheckAccessibilityService()) 
-                return;
-
             _connection.SendMessage(ProxyService.MsgToggleService);
         }
+
         public override void OnRequestPermissionsResult(int RequestCode, string[] Permissions, [GeneratedEnum] Android.Content.PM.Permission[] GrantResults)
         {
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(RequestCode, Permissions, GrantResults);
