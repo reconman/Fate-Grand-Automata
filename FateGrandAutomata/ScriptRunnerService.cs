@@ -24,7 +24,7 @@ namespace FateGrandAutomata
     public class ScriptRunnerService : AccessibilityService
     {
         FrameLayout _layout;
-        IWindowManager _windowManager;
+        public IWindowManager WindowManager { get; private set; }
         WindowManagerLayoutParams _layoutParams;
 
         int _screenDensity, _screenWidth, _screenHeight;
@@ -68,7 +68,7 @@ namespace FateGrandAutomata
                 _mediaProjection = MediaProjectionManager.GetMediaProjection((int)Result.Ok, MediaProjectionToken);
             }
 
-            _windowManager.AddView(_layout, _layoutParams);
+            WindowManager.AddView(_layout, _layoutParams);
             ServiceStarted = true;
 
             return true;
@@ -83,7 +83,7 @@ namespace FateGrandAutomata
                 return false;
             }
 
-            _windowManager.RemoveView(_layout);
+            WindowManager.RemoveView(_layout);
             ServiceStarted = false;
 
             return true;
@@ -164,7 +164,7 @@ namespace FateGrandAutomata
             AutomataApi.RegisterPlatform(new AndroidImpl(this));
             Preferences.SetPreference(new FgoPreferences(this));
 
-            _windowManager = GetSystemService(WindowService).JavaCast<IWindowManager>();
+            WindowManager = GetSystemService(WindowService).JavaCast<IWindowManager>();
 
             _layout = new FrameLayout(this);
             _layoutParams = new WindowManagerLayoutParams
@@ -194,7 +194,7 @@ namespace FateGrandAutomata
             MediaProjectionManager = (MediaProjectionManager)GetSystemService(MediaProjectionService);
 
             var metrics = new DisplayMetrics();
-            _windowManager.DefaultDisplay.GetRealMetrics(metrics);
+            WindowManager.DefaultDisplay.GetRealMetrics(metrics);
             _screenDensity = (int)metrics.DensityDpi;
             _screenWidth = metrics.WidthPixels;
             _screenHeight = metrics.HeightPixels;

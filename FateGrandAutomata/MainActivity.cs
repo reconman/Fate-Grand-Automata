@@ -53,18 +53,13 @@ namespace FateGrandAutomata
 
             if (_connection.IsBound)
             {
-                if (_connection.Messenger != null)
+                try
                 {
-                    try
-                    {
-                        var msg = Message.Obtain(null, ProxyService.MsgUnregisterClient);
-                        msg.ReplyTo = _connection.Receiver;
-                        _connection.Messenger.Send(msg);
-                    }
-                    catch (RemoteException)
-                    {
-                        // There is nothing special we need to do if the service has crashed.
-                    }
+                    _connection.SendMessage(ProxyService.MsgUnregisterClient);
+                }
+                catch (RemoteException)
+                {
+                    // There is nothing special we need to do if the service has crashed.
                 }
 
                 UnbindService(_connection);
@@ -82,7 +77,11 @@ namespace FateGrandAutomata
         {
             base.OnAttachedToWindow();
 
-            CutoutManager.ApplyCutout(this);
+            // Android P added support for display cutouts
+            if (Build.VERSION.SdkInt < BuildVersionCodes.P)
+                return;
+
+            _connection.SendMessage(ProxyService.MsgCutout, Window.DecorView.RootWindowInsets.DisplayCutout);
         }
 
         protected override void OnRestart()
@@ -93,52 +92,7 @@ namespace FateGrandAutomata
 
         void ShowStatusText()
         {
-            if (ScriptRunnerService.Instance == null)
-            {
-                return;
-            }
-
-            var statusTextView = FindViewById<TextView>(Resource.Id.status_textview);
-
-            var autoskillOn = Preferences.Instance.EnableAutoSkill;
-            var autoskillCmd = autoskillOn
-                ? $" - {Preferences.Instance.SkillCommand}"
-                : "";
-
-            var refillPrefs = Preferences.Instance.Refill;
-
-            var autoRefillOn = refillPrefs.Enabled;
-            var autoRefillStatus = autoRefillOn
-                ? $" - {refillPrefs.Enabled} x{refillPrefs.Repetitions}"
-                : "";
-
-            var supportPrefs = Preferences.Instance.Support;
-            var preferredMode = supportPrefs.SelectionMode == SupportSelectionMode.Preferred;
-
-            static string Any(string Value) => string.IsNullOrWhiteSpace(Value)
-                ? "Any"
-                : Value;
-
-            var supportStatus = preferredMode
-                ? $"Servants: '{Any(supportPrefs.PreferredServants)}', CEs: '{Any(supportPrefs.PreferredCEs)}'"
-                : "";
-
-            static string OnOff(bool Value) => Value ? "ON" : "OFF";
-
-            var statusText = $"Mode: {Preferences.Instance.ScriptMode}";
-
-            if (Preferences.Instance.ScriptMode == ScriptMode.Battle)
-            {
-                statusText += $@"
-Server: {Preferences.Instance.GameServer}
-Auto Skill: {OnOff(autoskillOn)}{autoskillCmd}
-Auto Refill: {OnOff(autoRefillOn)}{autoRefillStatus}
-Auto Support Selection: {supportPrefs.SelectionMode}
-{supportStatus}
-";
-            }
-
-            statusTextView.Text = statusText;
+            _connection.SendMessage(ProxyService.MsgAskStatus);
         }
 
         void IgnoreBatteryOptimizations()

@@ -10,6 +10,9 @@ namespace FateGrandAutomata
 
         public const int MsgRegisterClient = 1;
         public const int MsgUnregisterClient = 2;
+        public const int MsgCutout = 3;
+        public const int MsgAskStatus = 4;
+        public const int MsgReceiveStatus = 5;
 
         public override IBinder OnBind(Intent Intent)
         {

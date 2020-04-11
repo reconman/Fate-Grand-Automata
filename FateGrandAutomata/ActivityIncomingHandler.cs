@@ -1,4 +1,5 @@
 ﻿using Android.OS;
+using Android.Widget;
 
 namespace FateGrandAutomata
 {
@@ -13,7 +14,20 @@ namespace FateGrandAutomata
 
         public override void HandleMessage(Message Msg)
         {
-            base.HandleMessage(Msg);
+            switch (Msg.What)
+            {
+                case ProxyService.MsgReceiveStatus:
+                    var statusTextView = _activity.FindViewById<TextView>(Resource.Id.status_textview);
+
+                    var statusText = Msg.Obj.ToString();
+
+                    statusTextView.Text = statusText;
+                    break;
+
+                default:
+                    base.HandleMessage(Msg);
+                    break;
+            }
         }
     }
 }

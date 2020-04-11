@@ -1,5 +1,6 @@
 ﻿using Android.Content;
 using Android.OS;
+using Java.Lang;
 
 namespace FateGrandAutomata
 {
@@ -7,25 +8,25 @@ namespace FateGrandAutomata
     {
         public ProxyConnection(MainActivity Activity)
         {
-            Receiver = new Messenger(new ActivityIncomingHandler(Activity));
+            _receiver = new Messenger(new ActivityIncomingHandler(Activity));
         }
 
         public bool IsBound { get; private set; }
 
-        public Messenger Messenger { get; private set; }
+        Messenger _messenger;
 
-        public Messenger Receiver { get; }
+        readonly Messenger _receiver;
 
         public void OnServiceConnected(ComponentName Name, IBinder Service)
         {
-            Messenger = new Messenger(Service);
+            _messenger = new Messenger(Service);
             IsBound = true;
 
             try
             {
                 var msg = Message.Obtain(null, ProxyService.MsgRegisterClient);
-                msg.ReplyTo = Receiver;
-                Messenger.Send(msg);
+                msg.ReplyTo = _receiver;
+                _messenger.Send(msg);
             }
             catch (RemoteException)
             {
@@ -38,8 +39,23 @@ namespace FateGrandAutomata
 
         public void OnServiceDisconnected(ComponentName Name)
         {
-            Messenger = null;
+            _messenger = null;
             IsBound = false;
+        }
+
+        public void SendMessage(int What, Object Obj = null)
+        {
+            if (!IsBound)
+                return;
+
+            if (_messenger == null)
+                return;
+
+            var msg = Obj != null
+                ? Message.Obtain(null, What, Obj)
+                : Message.Obtain(null, What);
+            msg.ReplyTo = _receiver;
+            _messenger.Send(msg);
         }
     }
 }

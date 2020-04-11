@@ -1,5 +1,4 @@
 ﻿using Android.Content;
-using Android.OS;
 using Android.Util;
 using Android.Views;
 using CoreAutomata;
@@ -13,26 +12,23 @@ namespace FateGrandAutomata
 
         static (int L, int T, int R, int B)? _cutoutVal;
 
-        public static void ApplyCutout(MainActivity MainActivity)
+        public static void ApplyCutout(DisplayCutout Cutout)
         {
             if (_cutoutFound)
                 return;
 
-            // Android P added support for display cutouts
-            if (Build.VERSION.SdkInt < BuildVersionCodes.P)
+            if (ScriptRunnerService.Instance == null)
                 return;
 
-            var cutout = MainActivity.Window.DecorView.RootWindowInsets.DisplayCutout;
-
-            var l = cutout.SafeInsetLeft;
-            var t = cutout.SafeInsetTop;
-            var r = cutout.SafeInsetRight;
-            var b = cutout.SafeInsetBottom;
+            var l = Cutout.SafeInsetLeft;
+            var t = Cutout.SafeInsetTop;
+            var r = Cutout.SafeInsetRight;
+            var b = Cutout.SafeInsetBottom;
 
             // Check if there is a cutout
             if (!(l == 0 && t == 0 && r == 0 && b == 0))
             {
-                var wm = MainActivity.GetSystemService(Context.WindowService).JavaCast<IWindowManager>();
+                var wm = ScriptRunnerService.Instance.WindowManager;
                 var rotation = wm.DefaultDisplay.Rotation;
 
                 // Store the cutout for Portrait orientation of device
