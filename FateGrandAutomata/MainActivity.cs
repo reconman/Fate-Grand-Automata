@@ -35,25 +35,17 @@ namespace FateGrandAutomata
             CheckPermissions();
             IgnoreBatteryOptimizations();
             ShowStatusText();
-        }
 
-        protected override void OnStart()
-        {
-            base.OnStart();
-
-            if (_connection == null)
-            {
-                _connection = new ProxyConnection(this);
-            }
+            _connection = new ProxyConnection(this);
 
             BindService(new Intent(this, typeof(ProxyService)),
                 _connection,
                 Bind.AutoCreate);
         }
 
-        protected override void OnStop()
+        protected override void OnDestroy()
         {
-            base.OnStop();
+            base.OnDestroy();
 
             if (_connection.IsBound)
             {

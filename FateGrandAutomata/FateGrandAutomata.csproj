@@ -74,6 +74,7 @@
     <Compile Include="AndroidImpl.cs" />
     <Compile Include="AutoSkill\AutoSkillActivity.cs" />
     <Compile Include="AutoSkill\AutoSkillItemActivity.cs" />
+    <Compile Include="Preferences\CrossProcessPrefs.cs" />
     <Compile Include="CutoutManager.cs" />
     <Compile Include="DroidCvPattern.cs" />
     <Compile Include="ServiceIncomingHandler.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="Preferences\SettingsActivity.cs" />
     <Compile Include="Preferences\RefillSettingsFragment.cs" />
     <Compile Include="Preferences\SettingsFragment.cs" />
+    <Compile Include="Preferences\SharedPreferencesContentProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

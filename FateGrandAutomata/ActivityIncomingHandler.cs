@@ -21,10 +21,9 @@ namespace FateGrandAutomata
             switch (Msg.What)
             {
                 case ProxyService.MsgReceiveStatus:
-                    var statusTextView = _activity.FindViewById<TextView>(Resource.Id.status_textview);
-
                     var statusText = Msg.Obj.ToString();
 
+                    var statusTextView = _activity.FindViewById<TextView>(Resource.Id.status_textview);
                     statusTextView.Text = statusText;
                     break;
 
