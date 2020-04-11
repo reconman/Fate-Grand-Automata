@@ -41,6 +41,11 @@ namespace FateGrandAutomata
         {
             base.OnStart();
 
+            if (_connection == null)
+            {
+                _connection = new ProxyConnection(this);
+            }
+
             BindService(new Intent(this, typeof(ProxyService)),
                 _connection,
                 Bind.AutoCreate);
@@ -65,12 +70,7 @@ namespace FateGrandAutomata
             }
         }
 
-        public MainActivity()
-        {
-            _connection = new ProxyConnection(this);
-        }
-
-        readonly ProxyConnection _connection;
+        ProxyConnection _connection;
 
         public override void OnAttachedToWindow()
         {
@@ -91,7 +91,7 @@ namespace FateGrandAutomata
 
         void ShowStatusText()
         {
-            _connection.SendMessage(ProxyService.MsgAskStatus);
+            _connection?.SendMessage(ProxyService.MsgAskStatus);
         }
 
         void IgnoreBatteryOptimizations()
@@ -152,7 +152,7 @@ namespace FateGrandAutomata
             _connection.SendMessage(ProxyService.MsgToggleService);
         }
 
-        public override void OnRequestPermissionsResult(int RequestCode, string[] Permissions, [GeneratedEnum] Android.Content.PM.Permission[] GrantResults)
+        public override void OnRequestPermissionsResult(int RequestCode, string[] Permissions, [GeneratedEnum] Permission[] GrantResults)
         {
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(RequestCode, Permissions, GrantResults);
 

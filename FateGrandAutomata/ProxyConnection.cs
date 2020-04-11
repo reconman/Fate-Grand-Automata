@@ -4,7 +4,7 @@ using Java.Lang;
 
 namespace FateGrandAutomata
 {
-    public class ProxyConnection : Java.Lang.Object, IServiceConnection
+    public class ProxyConnection : Object, IServiceConnection
     {
         public ProxyConnection(MainActivity Activity)
         {

@@ -4,6 +4,7 @@ using Android.OS;
 
 namespace FateGrandAutomata
 {
+    [Service]
     public class ProxyService : Service
     {
         Messenger _messenger;

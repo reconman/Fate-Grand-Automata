@@ -73,6 +73,9 @@ namespace FateGrandAutomata
 
         static string GetStatusText()
         {
+            if (Preferences.Instance == null)
+                return "";
+
             var autoskillOn = Preferences.Instance.EnableAutoSkill;
             var autoskillCmd = autoskillOn
                 ? $" - {Preferences.Instance.SkillCommand}"
