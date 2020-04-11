@@ -1,4 +1,5 @@
-﻿using Android.OS;
+﻿using Android.Content;
+using Android.OS;
 using Android.Views;
 using Java.Lang;
 
@@ -56,6 +57,12 @@ namespace FateGrandAutomata
                         }
                         else SendResponse(ProxyService.MsgNoMediaProjectionToken);
                     }
+                    break;
+
+                case ProxyService.MsgStartWithMediaProjectionToken:
+                    var mediaProjectionToken = Msg.Obj as Intent;
+
+                    ScriptRunnerService.Instance.Start(mediaProjectionToken);
                     break;
 
                 default:

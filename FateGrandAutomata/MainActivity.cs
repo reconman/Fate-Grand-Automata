@@ -11,7 +11,6 @@ using Android.Widget;
 using AndroidX.AppCompat.App;
 using AndroidX.Core.App;
 using AndroidX.Core.Content;
-using AlertDialog = Android.App.AlertDialog;
 
 namespace FateGrandAutomata
 {
@@ -118,7 +117,7 @@ namespace FateGrandAutomata
                     return;
                 }
 
-                ScriptRunnerService.Instance.Start(Data);
+                _connection.SendMessage(ProxyService.MsgStartWithMediaProjectionToken, Data);
             }
         }
 
