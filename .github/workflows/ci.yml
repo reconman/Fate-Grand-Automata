@@ -27,11 +27,13 @@ jobs:
           if ($env:GITHUB_REF.StartsWith('refs/tags/')) {
               $VERSION_NAME = $env:GITHUB_REF.Substring(10)
           }
-          echo "FGA_VERSION_CODE=$VERSION_CODE" >> $GITHUB_ENV
-          echo "FGA_VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
+          echo "FGA_VERSION_CODE=$VERSION_CODE" >> $env:GITHUB_ENV
+          echo "FGA_VERSION_NAME=$VERSION_NAME" >> $env:GITHUB_ENV
 
       - name: Build Android Package
-        run: ./gradlew assembleCi
+        uses: eskatos/gradle-command-action@v1
+        with:
+          arguments: assembleCi
 
       - name: Upload APK
         uses: actions/upload-artifact@v1
@@ -50,7 +52,9 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         env:
           KEYSTORE_PASS: ${{ secrets.KEYSTORE_PASS }}
-        run: ./gradlew bundleRelease
+        uses: eskatos/gradle-command-action@v1
+        with:
+          arguments: bundleRelease
 
       - name: Upload Bundle
         uses: actions/upload-artifact@v1
